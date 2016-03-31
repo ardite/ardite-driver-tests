@@ -1,0 +1,12 @@
+[package]
+name = "ardite-driver-tests"
+version = "0.0.1"
+description = "Integration tests for Ardite drivers."
+keywords = ["ardite", "driver", "tests"]
+authors = ["Caleb Meredith <calebmeredith8@gmail.com>"]
+license = "MIT"
+repository = "https://github.com/ardite/ardite-driver-tests"
+readme = "README.md"
+
+[dependencies]
+ardite = { path = "../ardite-core" }
