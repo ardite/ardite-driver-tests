@@ -49,7 +49,7 @@ macro_rules! test_driver_read {
         let driver = <$tests as $crate::Tests>::test_driver("read_all", vals());
         assert_eq!(
           driver.read(
-            &"read_all".to_owned(),
+            "read_all",
             Default::default(),
             Default::default(),
             Default::default(),
@@ -64,7 +64,7 @@ macro_rules! test_driver_read {
         let driver = <$tests as $crate::Tests>::test_driver("read_condition", vals());
         assert_eq!(
           driver.read(
-            &"read_condition".to_owned(),
+            "read_condition",
             Condition::False,
             Default::default(),
             Default::default(),
@@ -74,7 +74,7 @@ macro_rules! test_driver_read {
         );
         assert_eq!(
           driver.read(
-            &"read_condition".to_owned(),
+            "read_condition",
             Condition::And(vec![Condition::True, Condition::False]),
             Default::default(),
             Default::default(),
@@ -84,7 +84,7 @@ macro_rules! test_driver_read {
         );
         assert_eq!(
           driver.read(
-            &"read_condition".to_owned(),
+            "read_condition",
             Condition::Or(vec![Condition::True, Condition::False]),
             Default::default(),
             Default::default(),
@@ -94,7 +94,7 @@ macro_rules! test_driver_read {
         );
         assert_eq!(
           driver.read(
-            &"read_condition".to_owned(),
+            "read_condition",
             Condition::Keys({
               let mut keys = LinearMap::new();
               keys.insert("c".to_owned(), Condition::Equal(Value::I64(3)));
@@ -108,7 +108,7 @@ macro_rules! test_driver_read {
         );
         assert_eq!(
           driver.read(
-            &"read_condition".to_owned(),
+            "read_condition",
             Condition::Keys({
               let mut keys = LinearMap::new();
               keys.insert("doc_b".to_owned(), Condition::Keys({
@@ -135,7 +135,7 @@ macro_rules! test_driver_read {
         let driver = <$tests as $crate::Tests>::test_driver("read_sort", vals());
         assert_eq!(
           driver.read(
-            &"read_sort".to_owned(),
+            "read_sort",
             Default::default(),
             vec![SortRule::new(vec!["c".to_owned()], true)],
             Default::default(),
@@ -145,7 +145,7 @@ macro_rules! test_driver_read {
         );
         assert_eq!(
           driver.read(
-            &"read_sort".to_owned(),
+            "read_sort",
             Default::default(),
             vec![SortRule::new(vec!["c".to_owned()], false)],
             Default::default(),
@@ -160,7 +160,7 @@ macro_rules! test_driver_read {
         let driver = <$tests as $crate::Tests>::test_driver("read_range", vals());
         assert_eq!(
           driver.read(
-            &"read_range".to_owned(),
+            "read_range",
             Default::default(),
             Default::default(),
             Range::new(None, Some(2)),
@@ -170,7 +170,7 @@ macro_rules! test_driver_read {
         );
         assert_eq!(
           driver.read(
-            &"read_range".to_owned(),
+            "read_range",
             Default::default(),
             Default::default(),
             Range::new(Some(1), Some(1)),
@@ -180,7 +180,7 @@ macro_rules! test_driver_read {
         );
         assert_eq!(
           driver.read(
-            &"read_range".to_owned(),
+            "read_range",
             Default::default(),
             Default::default(),
             Range::new(Some(1), None),
@@ -190,7 +190,7 @@ macro_rules! test_driver_read {
         );
         assert_eq!(
           driver.read(
-            &"read_range".to_owned(),
+            "read_range",
             Default::default(),
             Default::default(),
             Range::new(Some(2), Some(40)),
@@ -205,7 +205,7 @@ macro_rules! test_driver_read {
         let driver = <$tests as $crate::Tests>::test_driver("read_query", vals());
         assert_eq!(
           driver.read(
-            &"read_query".to_owned(),
+            "read_query",
             Default::default(),
             Default::default(),
             Default::default(),
@@ -215,7 +215,7 @@ macro_rules! test_driver_read {
         );
         assert_eq!(
           driver.read(
-            &"read_query".to_owned(),
+            "read_query",
             Default::default(),
             Default::default(),
             Default::default(),
