@@ -95,11 +95,7 @@ macro_rules! test_driver_read {
         assert_eq!(
           driver.read(
             "read_condition",
-            Condition::Keys({
-              let mut keys = LinearMap::new();
-              keys.insert("c".to_owned(), Condition::Equal(Value::I64(3)));
-              keys
-            }),
+            Condition::Key("c".to_owned(), Box::new(Condition::Equal(Value::I64(3)))),
             Default::default(),
             Default::default(),
             Default::default()
@@ -109,19 +105,16 @@ macro_rules! test_driver_read {
         assert_eq!(
           driver.read(
             "read_condition",
-            Condition::Keys({
-              let mut keys = LinearMap::new();
-              keys.insert("doc_b".to_owned(), Condition::Keys({
-                let mut keys = LinearMap::new();
-                keys.insert("doc_a".to_owned(), Condition::Keys({
-                  let mut keys = LinearMap::new();
-                  keys.insert("d".to_owned(), Condition::Equal(Value::I64(4)));
-                  keys
-                }));
-                keys
-              }));
-              keys
-            }),
+            Condition::Key(
+              "doc_b".to_owned(),
+              Box::new(Condition::Key(
+                "doc_a".to_owned(),
+                Box::new(Condition::Key(
+                  "d".to_owned(),
+                  Box::new(Condition::Equal(Value::I64(4)))
+                ))
+              ))
+            ),
             Default::default(),
             Default::default(),
             Default::default()
