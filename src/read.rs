@@ -5,7 +5,7 @@ macro_rules! test_driver_read {
       use super::*;
 
       use ::ardite::value::{Object, Value};
-      use ::ardite::query::{Condition, SortRule, Range};
+      use ::ardite::query::{Condition, Sort, Range};
 
       fn val_a() -> Value {
         let mut object = Object::new();
@@ -122,7 +122,7 @@ macro_rules! test_driver_read {
           driver.read(
             "read_sort",
             Default::default(),
-            vec![SortRule::new(vec!["c".to_owned()], true)],
+            vec![Sort::new(vec!["c".to_owned()], true)],
             Default::default()
           ).unwrap().collect::<Vec<Value>>(),
           vec![val_a(), val_c(), val_b()]
@@ -131,7 +131,7 @@ macro_rules! test_driver_read {
           driver.read(
             "read_sort",
             Default::default(),
-            vec![SortRule::new(vec!["c".to_owned()], false)],
+            vec![Sort::new(vec!["c".to_owned()], false)],
             Default::default()
           ).unwrap().collect::<Vec<Value>>(),
           vec![val_b(), val_a(), val_c()]
