@@ -12,3 +12,6 @@ readme = "README.md"
 
 [dependencies]
 ardite = { path = "../ardite-core" }
+
+[dev-dependencies]
+linear-map = { git = "https://github.com/calebmer/linear-map", features = ["serde_impl"] }
