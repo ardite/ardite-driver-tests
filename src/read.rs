@@ -5,9 +5,7 @@ macro_rules! test_driver_read {
       use super::*;
 
       use ::ardite::value::{Object, Value};
-      use ::ardite::query::{Condition, SortRule, Range, Query};
-      // TODO: Find a way to remove this dependency.
-      use ::linear_map::LinearMap;
+      use ::ardite::query::{Condition, SortRule, Range};
 
       fn val_a() -> Value {
         let mut object = Object::new();
@@ -52,7 +50,6 @@ macro_rules! test_driver_read {
             "read_all",
             Default::default(),
             Default::default(),
-            Default::default(),
             Default::default()
           ).unwrap().collect::<Vec<Value>>(),
           vec![val_a(), val_b(), val_c()]
@@ -67,7 +64,6 @@ macro_rules! test_driver_read {
             "read_condition",
             Condition::False,
             Default::default(),
-            Default::default(),
             Default::default()
           ).unwrap().collect::<Vec<Value>>(),
           vec![]
@@ -76,7 +72,6 @@ macro_rules! test_driver_read {
           driver.read(
             "read_condition",
             Condition::And(vec![Condition::True, Condition::False]),
-            Default::default(),
             Default::default(),
             Default::default()
           ).unwrap().collect::<Vec<Value>>(),
@@ -87,7 +82,6 @@ macro_rules! test_driver_read {
             "read_condition",
             Condition::Or(vec![Condition::True, Condition::False]),
             Default::default(),
-            Default::default(),
             Default::default()
           ).unwrap().collect::<Vec<Value>>(),
           vec![val_a(), val_b(), val_c()]
@@ -96,7 +90,6 @@ macro_rules! test_driver_read {
           driver.read(
             "read_condition",
             Condition::Key("c".to_owned(), Box::new(Condition::Equal(Value::I64(3)))),
-            Default::default(),
             Default::default(),
             Default::default()
           ).unwrap().collect::<Vec<Value>>(),
@@ -116,7 +109,6 @@ macro_rules! test_driver_read {
               ))
             ),
             Default::default(),
-            Default::default(),
             Default::default()
           ).unwrap().collect::<Vec<Value>>(),
           vec![val_c()]
@@ -131,7 +123,6 @@ macro_rules! test_driver_read {
             "read_sort",
             Default::default(),
             vec![SortRule::new(vec!["c".to_owned()], true)],
-            Default::default(),
             Default::default()
           ).unwrap().collect::<Vec<Value>>(),
           vec![val_a(), val_c(), val_b()]
@@ -141,7 +132,6 @@ macro_rules! test_driver_read {
             "read_sort",
             Default::default(),
             vec![SortRule::new(vec!["c".to_owned()], false)],
-            Default::default(),
             Default::default()
           ).unwrap().collect::<Vec<Value>>(),
           vec![val_b(), val_a(), val_c()]
@@ -156,8 +146,7 @@ macro_rules! test_driver_read {
             "read_range",
             Default::default(),
             Default::default(),
-            Range::new(None, Some(2)),
-            Default::default()
+            Range::new(None, Some(2))
           ).unwrap().collect::<Vec<Value>>(),
           vec![val_a(), val_b()]
         );
@@ -166,8 +155,7 @@ macro_rules! test_driver_read {
             "read_range",
             Default::default(),
             Default::default(),
-            Range::new(Some(1), Some(1)),
-            Default::default()
+            Range::new(Some(1), Some(1))
           ).unwrap().collect::<Vec<Value>>(),
           vec![val_b()]
         );
@@ -176,8 +164,7 @@ macro_rules! test_driver_read {
             "read_range",
             Default::default(),
             Default::default(),
-            Range::new(Some(1), None),
-            Default::default()
+            Range::new(Some(1), None)
           ).unwrap().collect::<Vec<Value>>(),
           vec![val_b(), val_c()]
         );
@@ -186,90 +173,9 @@ macro_rules! test_driver_read {
             "read_range",
             Default::default(),
             Default::default(),
-            Range::new(Some(2), Some(40)),
-            Default::default()
+            Range::new(Some(2), Some(40))
           ).unwrap().collect::<Vec<Value>>(),
           vec![val_c()]
-        );
-      }
-
-      #[test]
-      fn test_query() {
-        let driver = <$tests as $crate::Tests>::test_driver("read_query", vals());
-        assert_eq!(
-          driver.read(
-            "read_query",
-            Default::default(),
-            Default::default(),
-            Default::default(),
-            Query::All
-          ).unwrap().collect::<Vec<Value>>(),
-          vec![val_a(), val_b(), val_c()]
-        );
-        assert_eq!(
-          driver.read(
-            "read_query",
-            Default::default(),
-            Default::default(),
-            Default::default(),
-            Query::Keys({
-              let mut keys = LinearMap::new();
-              keys.insert("a".to_owned(), Query::All);
-              keys.insert("c".to_owned(), Query::All);
-              keys.insert("hello".to_owned(), Query::All);
-              keys.insert("doc_a".to_owned(), Query::Keys({
-                let mut keys = LinearMap::new();
-                keys.insert("b".to_owned(), Query::All);
-                keys
-              }));
-              keys.insert("doc_b".to_owned(), Query::Keys({
-                let mut keys = LinearMap::new();
-                keys.insert("hello".to_owned(), Query::All);
-                keys.insert("doc_a".to_owned(), Query::Keys({
-                  let mut keys = LinearMap::new();
-                  keys.insert("b".to_owned(), Query::All);
-                  keys
-                }));
-                keys
-              }));
-              keys
-            })
-          ).unwrap().collect::<Vec<Value>>(),
-          vec![
-            {
-              let mut object = Object::new();
-              object.insert("a".to_owned(), Value::I64(1));
-              object.insert("c".to_owned(), Value::I64(3));
-              Value::Object(object)
-            },
-            {
-              let mut object = Object::new();
-              object.insert("c".to_owned(), Value::I64(4));
-              object.insert("hello".to_owned(), Value::String("world".to_owned()));
-              object.insert("doc_a".to_owned(), {
-                let mut object = Object::new();
-                object.insert("b".to_owned(), Value::I64(2));
-                Value::Object(object)
-              });
-              Value::Object(object)
-            },
-            {
-              let mut object = Object::new();
-              object.insert("a".to_owned(), Value::I64(1));
-              object.insert("c".to_owned(), Value::I64(3));
-              object.insert("doc_b".to_owned(), {
-                let mut object = Object::new();
-                object.insert("hello".to_owned(), Value::String("world".to_owned()));
-                object.insert("doc_a".to_owned(), {
-                  let mut object = Object::new();
-                  object.insert("b".to_owned(), Value::I64(2));
-                  Value::Object(object)
-                });
-                Value::Object(object)
-              });
-              Value::Object(object)
-            }
-          ]
         );
       }
 
@@ -281,8 +187,7 @@ macro_rules! test_driver_read {
             "read_condition_before_range",
             Condition::Key("c".to_owned(), Box::new(Condition::Equal(Value::I64(3)))),
             Default::default(),
-            Range::new(None, Some(1)),
-            Default::default()
+            Range::new(None, Some(1))
           ).unwrap().collect::<Vec<Value>>(),
           vec![val_a()]
         );
@@ -291,8 +196,7 @@ macro_rules! test_driver_read {
             "read_condition_before_range",
             Condition::Key("c".to_owned(), Box::new(Condition::Equal(Value::I64(3)))),
             Default::default(),
-            Range::new(Some(1), Some(1)),
-            Default::default()
+            Range::new(Some(1), Some(1))
           ).unwrap().collect::<Vec<Value>>(),
           vec![val_c()]
         );
