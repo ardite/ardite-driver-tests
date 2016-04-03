@@ -45,7 +45,7 @@ macro_rules! test_driver_read {
       }
 
       #[test]
-      fn test_read_all() {
+      fn test_all() {
         let driver = <$tests as $crate::Tests>::test_driver("read_all", vals());
         assert_eq!(
           driver.read(
@@ -60,7 +60,7 @@ macro_rules! test_driver_read {
       }
 
       #[test]
-      fn test_read_condition() {
+      fn test_condition() {
         let driver = <$tests as $crate::Tests>::test_driver("read_condition", vals());
         assert_eq!(
           driver.read(
@@ -124,7 +124,7 @@ macro_rules! test_driver_read {
       }
 
       #[test]
-      fn test_read_sort() {
+      fn test_sort() {
         let driver = <$tests as $crate::Tests>::test_driver("read_sort", vals());
         assert_eq!(
           driver.read(
@@ -149,7 +149,7 @@ macro_rules! test_driver_read {
       }
 
       #[test]
-      fn test_read_range() {
+      fn test_range() {
         let driver = <$tests as $crate::Tests>::test_driver("read_range", vals());
         assert_eq!(
           driver.read(
@@ -194,7 +194,7 @@ macro_rules! test_driver_read {
       }
 
       #[test]
-      fn test_read_query() {
+      fn test_query() {
         let driver = <$tests as $crate::Tests>::test_driver("read_query", vals());
         assert_eq!(
           driver.read(
@@ -270,6 +270,31 @@ macro_rules! test_driver_read {
               Value::Object(object)
             }
           ]
+        );
+      }
+
+      #[test]
+      fn test_condition_before_range() {
+        let driver = <$tests as $crate::Tests>::test_driver("read_condition_before_range", vals());
+        assert_eq!(
+          driver.read(
+            "read_condition_before_range",
+            Condition::Key("c".to_owned(), Box::new(Condition::Equal(Value::I64(3)))),
+            Default::default(),
+            Range::new(None, Some(1)),
+            Default::default()
+          ).unwrap().collect::<Vec<Value>>(),
+          vec![val_a()]
+        );
+        assert_eq!(
+          driver.read(
+            "read_condition_before_range",
+            Condition::Key("c".to_owned(), Box::new(Condition::Equal(Value::I64(3)))),
+            Default::default(),
+            Range::new(Some(1), Some(1)),
+            Default::default()
+          ).unwrap().collect::<Vec<Value>>(),
+          vec![val_c()]
         );
       }
     }
